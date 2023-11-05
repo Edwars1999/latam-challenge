@@ -13,7 +13,7 @@ class TestBatchPipeline(unittest.TestCase):
             "flights": [
                 {
                     "OPERA": "Aerolineas Argentinas", 
-                    "TIPOVUELO": "N", 
+                    "TIPOVUELO": "I", 
                     "MES": 3
                 }
             ]

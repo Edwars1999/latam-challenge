@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="4" time="123.838" timestamp="2023-11-05T13:52:36.637588" hostname="Ryzen3600-EGSM"><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_failed_unkown_column_1" time="30.207" /><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_failed_unkown_column_2" time="30.630" /><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_failed_unkown_column_3" time="30.439" /><testcase classname="tests.api.test_api.TestBatchPipeline" name="test_should_get_predict" time="30.496"><failure message="AssertionError: 400 != 200">self = &lt;tests.api.test_api.TestBatchPipeline testMethod=test_should_get_predict&gt;
+
+    def test_should_get_predict(self):
+        data = {
+            "flights": [
+                {
+                    "OPERA": "Aerolineas Argentinas",
+                    "TIPOVUELO": "I",
+                    "MES": 3
+                }
+            ]
+        }
+        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0])) # change this line to the model of chosing
+        response = self.client.post("/predict", json=data)
+&gt;       self.assertEqual(response.status_code, 200)
+E       AssertionError: 400 != 200
+
+tests\api\test_api.py:23: AssertionError</failure></testcase></testsuite></testsuites>

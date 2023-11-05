@@ -1,19 +1,22 @@
 import pandas as pd
+import xgboost as xgb
 
 from typing import Tuple, Union, List
+from xgboost import plot_importance
 
 class DelayModel:
 
     def __init__(
         self
     ):
-        self._model = None # Model should be saved in this attribute.
+        self._model = xgb.XGBClassifier(random_state=1, learning_rate=0.01, scale_pos_weight = 4.44) # Model should be saved in this attribute.
+        # Model chosen because of its precision
 
     def preprocess(
         self,
         data: pd.DataFrame,
         target_column: str = None
-    ) -> Union(Tuple[pd.DataFrame, pd.DataFrame], pd.DataFrame):
+    ) -> Union[Tuple[pd.DataFrame, pd.DataFrame], pd.DataFrame]:
         """
         Prepare raw data for training or predict.
 
@@ -26,7 +29,20 @@ class DelayModel:
             or
             pd.DataFrame: features.
         """
-        return
+        features = pd.concat([
+            pd.get_dummies(data['OPERA'], prefix = 'OPERA'),
+            pd.get_dummies(data['TIPOVUELO'], prefix = 'TIPOVUELO'), 
+            pd.get_dummies(data['MES'], prefix = 'MES')], 
+            axis = 1
+        )
+
+        if target_column is None:
+            return features
+        else:
+            target = data[target_column]
+            if not isinstance(target, pd.DataFrame):
+                target = pd.DataFrame(target)
+            return (features, target)
 
     def fit(
         self,
@@ -40,6 +56,7 @@ class DelayModel:
             features (pd.DataFrame): preprocessed data.
             target (pd.DataFrame): target.
         """
+        self._model.fit(features, target)
         return
 
     def predict(
@@ -55,4 +72,6 @@ class DelayModel:
         Returns:
             (List[int]): predicted targets.
         """
-        return
+        predictions = self._model.predict(features)
+        predictions = [1 if y_pred > 0.5 else 0 for y_pred in predictions]
+        return predictions
